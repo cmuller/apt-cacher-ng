@@ -1,0 +1,43 @@
+version: "2.3"
+services:
+  alpine-prx:
+    image: alpine-cacher-ng
+    volumes:
+      - alpine_data:/var/cache/apt-cacher-ng
+  debian-prx:
+    image: debian-cacher-ng
+    volumes:
+      - debian_data:/var/cache/apt-cacher-ng
+  gentoo-prx:
+    image: gentoo-cacher-ng
+    volumes:
+      - gentoo_data:/var/cache/apt-cacher-ng
+  alpine:
+    image: alpine
+    command: tail -f /dev/null
+    environment:
+      http_proxy: http://alpine-prx:3142
+  debian:
+    image: debian
+    command: tail -f /dev/null
+    environment:
+      http_proxy: http://debian-prx:3142
+  gentoo-portage:
+    image: gentoo/portage
+    command: tail -f /dev/null
+    volumes:
+      - portage:/usr/portage
+  gentoo:
+    image: gentoo/stage3-amd64
+    command: tail -f /dev/null
+    volumes:
+      - portage:/usr/portage
+    environment:
+      http_proxy: http://gentoo-prx:3142
+    depends_on:
+      - gentoo-portage
+volumes:
+  portage:
+  alpine_data:
+  debian_data:
+  gentoo_data:
