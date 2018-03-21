@@ -2,7 +2,7 @@ FROM debian:stable-slim
 
 RUN apt update && \
     apt upgrade -y && \
-    apt install -y apt-cacher-ng && \
+    apt install -y apt-cacher-ng ca-certificates && \
     apt clean && \
     sed -i -e 's/^Remap/# Remap/' /etc/apt-cacher-ng/acng.conf
 
